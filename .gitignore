@@ -14,3 +14,7 @@ data/inputs/简历/**
 # 系统文件
 .DS_Store
 Thumbs.db
+
+# 编辑器与工具本地配置
+.claude/
+.vscode/
