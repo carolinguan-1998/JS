@@ -5,7 +5,8 @@
   "scripts": {
     "analyze": "node analyze.js",
     "rename": "node analyze.js --rename-only",
-    "watch": "node clipboard-watch.js"
+    "watch": "node clipboard-watch.js",
+    "init-resume": "node analyze.js --init-resume"
   },
   "dependencies": {
     "dotenv": "^16.0.0",

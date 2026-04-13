@@ -1,6 +1,7 @@
+import { existsSync, readdirSync } from 'fs';
 import { extname } from 'path';
 import { analyzeJD, extractShortName } from './lib/ai.js';
-import { DEEPSEEK_API_KEY, QWEN_API_KEY } from './lib/config.js';
+import { DEEPSEEK_API_KEY, QWEN_API_KEY, RESUMES_DIR } from './lib/config.js';
 import {
   archiveProcessedFile,
   ensureRuntimeDirs,
@@ -9,7 +10,43 @@ import {
   renameJDFile,
 } from './lib/files.js';
 import { appendResultsToMarkdown, appendToLark, copyToClipboard, printResults } from './lib/output.js';
+import { getResumePaths, ensureResumeMarkdown } from './lib/resume.js';
 import { withRetry } from './lib/utils.js';
+
+function checkResumeExists() {
+  const pdfs = existsSync(RESUMES_DIR)
+    ? readdirSync(RESUMES_DIR).filter(f => f.toLowerCase().endsWith('.pdf'))
+    : [];
+
+  if (pdfs.length === 0) {
+    console.error('❌ 未找到简历文件');
+    console.error(`   请将你的简历 PDF 放入 ${RESUMES_DIR}/ 目录`);
+    console.error('   放入后，运行以下命令解析为 Markdown：');
+    console.error('   npm run init-resume');
+    process.exit(1);
+  }
+}
+
+async function initResumeMode() {
+  const paths = getResumePaths();
+  if (paths.length === 0) {
+    console.error('❌ 未找到简历 PDF');
+    console.error(`   请将你的简历 PDF 放入 ${RESUMES_DIR}/ 目录后重试`);
+    process.exit(1);
+  }
+
+  console.log(`📄 找到 ${paths.length} 份简历，开始解析...\n`);
+  for (const filePath of paths) {
+    process.stdout.write(`  ⏳ 解析：${filePath}...`);
+    try {
+      const mdPath = await ensureResumeMarkdown(filePath);
+      console.log(` ✅ → ${mdPath}`);
+    } catch (err) {
+      console.log(` ❌ 失败：${err.message}`);
+    }
+  }
+  console.log('\n🎉 简历解析完成！可运行 npm run analyze 开始分析职位。');
+}
 
 function requireApiKey() {
   if (!DEEPSEEK_API_KEY || DEEPSEEK_API_KEY.includes('这里填')) {
@@ -61,11 +98,16 @@ async function renameOnlyMode() {
 }
 
 export async function main(argv = process.argv.slice(2)) {
+  if (argv.includes('--init-resume')) {
+    return initResumeMode();
+  }
+
   if (argv.includes('--rename-only')) {
     return renameOnlyMode();
   }
 
   requireApiKey();
+  checkResumeExists();
 
   ensureRuntimeDirs();
 

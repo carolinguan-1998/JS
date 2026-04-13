@@ -19,6 +19,36 @@
 
 ---
 
+## 2026-04-13
+
+### ✅ 开源适配：移除个人信息，支持用户上传自己的简历
+
+**背景**：将项目发布到 GitHub，需要去除所有个人敏感信息（API Key、简历文件、硬编码姓名），并引导其他用户接入自己的简历。
+
+**改动内容**：
+
+1. **`.env.example`（新建）** — 添加 API Key 配置模板，供用户复制后填入自己的密钥
+
+2. **`.gitignore`** — 新增 `data/inputs/简历/**`（排除简历 PDF/MD），保留 `.gitkeep` 使目录结构可被追踪
+
+3. **`src/lib/config.js`** — 移除 `RESUMES` 对象（原硬编码三份个人简历路径），改为由 `resume.js` 动态扫描目录
+
+4. **`src/lib/resume.js`** — `getResumePaths()` 改为自动扫描 `RESUMES_DIR` 下所有 PDF；`buildResumeSection()` 移除 `jobType` 参数（简历不再按岗位类型分组，使用目录中全部简历）；`ensureResumeMarkdown()` 改为导出，供 `init-resume` 命令调用
+
+5. **`src/cli.js`** — 新增 `checkResumeExists()`：启动时若无简历则报错提示；新增 `initResumeMode()`：扫描目录 PDF 并逐一解析为 Markdown；`main()` 新增 `--init-resume` 分支
+
+6. **`package.json`** — 新增 `init-resume` 脚本（`node analyze.js --init-resume`）
+
+7. **`src/lib/output.js`** — 移除 `resolveLarkCliPath()` 中硬编码的用户本地路径，改为仅读取 `LARK_CLI_PATH` 环境变量
+
+8. **`greeting-examples.txt`** — 替换为匿名占位示例，移除个人信息
+
+9. **`data/inputs/简历/.gitkeep`、`data/inputs/待分析JD/.gitkeep`（新建）** — 保留目录结构可被 Git 追踪
+
+10. **`README.md`** — 全面改写，新增简历初始化步骤、岗位类型说明表、常见问题
+
+---
+
 ## 2026-04-09 (2)
 
 ### ✅ 监听模式退出键改为 Ctrl+E，招呼语生成后自动复制到剪贴板

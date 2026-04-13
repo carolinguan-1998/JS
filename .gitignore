@@ -7,6 +7,10 @@ node_modules/
 # 运行产物
 runtime/
 
+# 简历文件（个人信息，不提交）
+data/inputs/简历/**
+!data/inputs/简历/.gitkeep
+
 # 系统文件
 .DS_Store
 Thumbs.db

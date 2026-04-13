@@ -21,15 +21,3 @@ export const EXAMPLE_STYLE_FILE = './greeting-examples.txt';
 export const LARK_SPREADSHEET_TOKEN = process.env.LARK_SPREADSHEET_TOKEN;
 export const LARK_SHEET_ID = process.env.LARK_SHEET_ID;
 export const LARK_CLI_PATH = process.env.LARK_CLI_PATH;
-
-export const RESUMES = {
-  ai: [
-    join(RESUMES_DIR, '关欣欣 中文简历 AI方向.pdf'),
-  ],
-  ib: [
-    join(RESUMES_DIR, '关欣欣简历 投行方向.pdf'),
-  ],
-  invest: [
-    join(RESUMES_DIR, '关欣欣 中文简历 投融资.pdf'),
-  ],
-};

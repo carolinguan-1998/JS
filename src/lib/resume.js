@@ -1,15 +1,15 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs';
 import { basename, dirname, join } from 'path';
 import pdfParse from 'pdf-parse';
-import { RESUMES } from './config.js';
+import { RESUMES_DIR } from './config.js';
 
 const resumeTextCache = new Map();
 
-export function getResumePaths(jobType) {
-  const paths = RESUMES[jobType] ?? RESUMES.ai;
-  const existing = paths.filter(path => existsSync(path));
-  if (existing.length === 0) return RESUMES.ai.filter(path => existsSync(path));
-  return existing;
+export function getResumePaths() {
+  if (!existsSync(RESUMES_DIR)) return [];
+  return readdirSync(RESUMES_DIR)
+    .filter(f => f.toLowerCase().endsWith('.pdf'))
+    .map(f => join(RESUMES_DIR, f));
 }
 
 export async function extractPdfText(filePath) {
@@ -40,7 +40,7 @@ function formatResumeMarkdown(filePath, text) {
   return `# ${title}\n\n${lines.join('\n\n')}\n`;
 }
 
-async function ensureResumeMarkdown(filePath) {
+export async function ensureResumeMarkdown(filePath) {
   const markdownPath = getResumeMarkdownPath(filePath);
 
   if (existsSync(markdownPath)) {
@@ -67,8 +67,8 @@ async function readResumeMarkdown(filePath) {
   return markdown;
 }
 
-export async function buildResumeSection(jobType) {
-  const resumePaths = getResumePaths(jobType);
+export async function buildResumeSection() {
+  const resumePaths = getResumePaths();
   const resumeTexts = [];
 
   for (const resumePath of resumePaths) {
@@ -81,5 +81,5 @@ export async function buildResumeSection(jobType) {
   }
 
   if (resumeTexts.length === 0) return '';
-  return `\n\n## 我的中文简历\n${resumeTexts.join('\n\n---\n\n')}`;
+  return `\n\n## 我的简历\n${resumeTexts.join('\n\n---\n\n')}`;
 }

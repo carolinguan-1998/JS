@@ -17,12 +17,8 @@ export function copyToClipboard(text) {
 }
 
 function resolveLarkCliPath() {
-  const candidates = [
-    LARK_CLI_PATH,
-    'C:/Users/user/AppData/Roaming/npm/node_modules/@larksuite/cli/scripts/run.js',
-  ].filter(Boolean);
-
-  return candidates.find(candidate => existsSync(candidate));
+  if (!LARK_CLI_PATH) return undefined;
+  return existsSync(LARK_CLI_PATH) ? LARK_CLI_PATH : undefined;
 }
 
 function formatResultAsMarkdown(result, processedAt) {

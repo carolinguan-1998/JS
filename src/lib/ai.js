@@ -326,7 +326,7 @@ export async function analyzeJDFromData(jdData, exampleStyle) {
   });
 
   const jobType = inferJobType(jobFields);
-  const resumeSection = await buildResumeSection(jobType);
+  const resumeSection = await buildResumeSection();
   const greeting = await generateGreetings(jobFields, resumeSection, exampleStyle, jobType);
 
   return {
