@@ -95,7 +95,10 @@ npm run watch
 JS/
 ├── analyze.js              # 统一入口
 ├── clipboard-watch.js      # 剪贴板监听模式
-├── greeting-examples.txt   # 招呼语风格参考（可自定义）
+├── docs/
+│   ├── PROMPTS_QWEN.md     # Qwen Prompt 设计文档
+│   ├── PROMPTS_DEEPSEEK.md # DeepSeek Prompt 设计文档
+│   └── greeting-examples.txt # 招呼语风格参考（可自定义）
 ├── .env.example            # 环境变量模板
 ├── src/
 │   ├── cli.js
@@ -121,6 +124,17 @@ JS/
   -> 归档已处理文件
   -> 可选同步飞书
 ```
+
+## 核心设计文档
+
+项目核心的 AI Prompt 设计已摘录为独立文档，供理解和修改参考：
+
+| 文件 | 内容 |
+|------|------|
+| `docs/PROMPTS_QWEN.md` | Qwen 图片 OCR / 文本解析的完整 prompt 设计 |
+| `docs/PROMPTS_DEEPSEEK.md` | DeepSeek 招呼语生成的 prompt + 动态段落逻辑说明 |
+
+详见各文件内的设计意图、调用位置、示例代码。
 
 ## 岗位类型说明
 
