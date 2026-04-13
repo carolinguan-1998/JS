@@ -1,0 +1,17 @@
+{
+  "name": "boss-jd-analyzer",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "analyze": "node analyze.js",
+    "rename": "node analyze.js --rename-only",
+    "watch": "node clipboard-watch.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "playwright": "^1.58.2"
+  }
+}
